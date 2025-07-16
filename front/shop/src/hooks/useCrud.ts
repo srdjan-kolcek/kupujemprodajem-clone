@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api } from '../services/BaseService';
+import { BaseEntity } from '../models/BaseEntity.model';
 
 export const useCrud = <T extends BaseEntity>(resourceName: string) => {
     const [data, setData] = useState<T[]>([]);

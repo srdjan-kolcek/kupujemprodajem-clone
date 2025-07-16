@@ -1,25 +1,31 @@
 import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
+import { useAuth } from '../../context/AuthContext';
 
-type HeaderProps = {
-    isLoggedIn: boolean;
-    username?: string;
-    onLogin: () => void;
-    onRegister: () => void;
-    onSignOut: () => void;
-};
+const Header: React.FC = () => {
+    const { isLoggedIn, username, logout } = useAuth();
+    const navigate = useNavigate();
 
-const Header: React.FC<HeaderProps> = ({
-    isLoggedIn, username, onLogin, onRegister, onSignOut
-}) => {
+    const handleLoginClick = () => {
+        navigate('/auth');
+    };
+
+    const handleRegisterClick = () => {
+        navigate('/auth');
+    };
+
+    const handleLogoutClick = () => {
+        logout();
+        navigate('/');
+    };
+
     return (
         <header className="header">
             <div className="header-logo">
-                <a href="/">
-                    {/* Ovde možeš dodati svoj logo (npr. SVG ili sliku) */}
-                    <span role="img" aria-label="logo">🛒</span>
+                <Link to="/">
                     <span> KupujemProdajem App</span>
-                </a>
+                </Link>
             </div>
 
             <div className="header-search">
@@ -30,16 +36,16 @@ const Header: React.FC<HeaderProps> = ({
                 {isLoggedIn ? (
                     <>
                         <span className="welcome-message">Zdravo, {username}!</span>
-                        <button className="btn-signout" onClick={onSignOut}>
+                        <button className="btn-signout" onClick={handleLogoutClick}>
                             Odjavi se
                         </button>
                     </>
                 ) : (
                     <>
-                        <button className="btn-login" onClick={onLogin}>
+                        <button className="btn-login" onClick={handleLoginClick}>
                             Prijavi se
                         </button>
-                        <button className="btn-register" onClick={onRegister}>
+                        <button className="btn-register" onClick={handleRegisterClick}>
                             Registruj se
                         </button>
                     </>

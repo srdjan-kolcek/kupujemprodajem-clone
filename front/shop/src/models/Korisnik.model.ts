@@ -1,3 +1,5 @@
+import { BaseEntity } from "./BaseEntity.model";
+
 export type Korisnik = BaseEntity & {
     korisnickoIme: string;
     sifra: string;

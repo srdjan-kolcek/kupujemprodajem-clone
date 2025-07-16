@@ -53,6 +53,6 @@ public class TokenUtils {
 		payload.put("sub", userDetails.getUsername());
 		payload.put("authorities", userDetails.getAuthorities());
 		
-		return Jwts.builder().claims(payload).expiration(new Date(System.currentTimeMillis() + 100000)).signWith(getKey()).compact();
+		return Jwts.builder().claims(payload).expiration(new Date(System.currentTimeMillis() + 1000000)).signWith(getKey()).compact();
 	}
 }

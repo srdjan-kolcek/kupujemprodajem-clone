@@ -3,28 +3,48 @@ import { Korisnik } from '../../models/Korisnik.model';
 import Register from '../../components/ui/Login/Register';
 import Login from '../../components/ui/Login/Login';
 import { jwtDecode } from 'jwt-decode';
-// import { useNavigate } from 'react-router-dom'; // Ako koristite React Router
+import { useNavigate } from 'react-router-dom'; 
+
+export const logoutUser = () => {
+  localStorage.removeItem('jwtToken');
+};
+
+export const isUserLoggedIn = (): boolean => {
+  const token = localStorage.getItem('jwtToken');
+  return !!token;
+};
+
+export const getLoggedInUsername = (): string | null => {
+  const token = localStorage.getItem('jwtToken');
+  if (!token) return null;
+  try {
+    const decoded: any = JSON.parse(atob(token.split('.')[1]));
+    return decoded.korisnickoIme || null;
+  } catch (e) {
+    return null;
+  }
+};
 
 function AuthPage() {
   const [showLogin, setShowLogin] = useState<boolean>(true);
   const [loggedInUser, setLoggedInUser] = useState<Korisnik | null>(null);
   const [jwtToken, setJwtToken] = useState<string | null>(null);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleLoginSuccess = (token: string, decodedUserPayload: { korisnickoIme: string, [key: string]: any }) => {
     setJwtToken(token);
     localStorage.setItem('jwtToken', token);
 
     const userFromToken: Korisnik = {
-        korisnickoIme: decodedUserPayload.korisnickoIme,
-        sifra: '',
-        brojTelefona: decodedUserPayload.brojTelefona || 'Nije dostupan', // Ako je telefon u tokenu
-        datumRegistracije: decodedUserPayload.datumRegistracije || new Date().toISOString(), // Ako je datum u tokenu
+      korisnickoIme: decodedUserPayload.korisnickoIme,
+      sifra: '',
+      brojTelefona: decodedUserPayload.brojTelefona || 'Nije dostupan', // Ako je telefon u tokenu
+      datumRegistracije: decodedUserPayload.datumRegistracije || new Date().toISOString(), // Ako je datum u tokenu
     };
     setLoggedInUser(userFromToken);
 
     alert(`Uspešna prijava! Dobrodošao, ${userFromToken.korisnickoIme}!`);
-    // navigate('/dashboard'); 
+    navigate('/'); 
   };
 
   const handleRegisterSuccess = () => {
@@ -61,12 +81,11 @@ function AuthPage() {
     return (
       <div className="welcome-screen">
         <h1>Dobrodošao nazad, {loggedInUser.korisnickoIme}!</h1>
-        <p>Ovo je tvoj glavni ekran. Šta želiš da radiš danas?</p>
         <button onClick={() => {
-            setLoggedInUser(null);
-            setJwtToken(null);
-            localStorage.removeItem('jwtToken');
-            // navigate('/login');
+          setLoggedInUser(null);
+          setJwtToken(null);
+          localStorage.removeItem('jwtToken');
+          navigate('/');
         }}>Odjavi se</button>
       </div>
     );
@@ -75,10 +94,7 @@ function AuthPage() {
   return (
     <div className="auth-page-container">
       {showLogin ? (
-        <Login
-          onLoginSuccess={handleLoginSuccess}
-          onNavigateToRegister={() => setShowLogin(false)}
-        />
+        <Login />
       ) : (
         <Register
           onRegisterSuccess={handleRegisterSuccess}

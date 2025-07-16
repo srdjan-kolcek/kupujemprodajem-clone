@@ -1,5 +1,7 @@
 package server.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import server.DTO.KorisnikDTO;
 import server.DTO.UserLoginDTO;
 import server.model.Korisnik;
 import server.service.KorisnikService;
@@ -27,7 +30,6 @@ public class LoginController {
 	
 	@Autowired
 	private KorisnikService korisnikService;
-	
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -57,4 +59,20 @@ public class LoginController {
 
         return new ResponseEntity<>("Pogrešna lozinka", HttpStatus.UNAUTHORIZED);
     }
+	
+	@PostMapping("register")
+	public ResponseEntity<String> register(@RequestBody KorisnikDTO user) {
+	    if (korisnikService.findByKorisnickoIme(user.getKorisnickoIme()) != null) {
+	        return new ResponseEntity<>("Korisničko ime je zauzeto", HttpStatus.CONFLICT);
+	    }
+
+	    user.setSifra(passwordEncoder.encode(user.getSifra()));
+	    user.setDatumRegistracije(new Date());
+	    if (user.getBrojTelefona() == null) user.setBrojTelefona("N/A");
+
+	    korisnikService.save(user);
+
+	    return new ResponseEntity<>("Uspešno registrovan korisnik", HttpStatus.CREATED);
+	}
+
 }

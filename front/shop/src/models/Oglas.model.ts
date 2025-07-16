@@ -1,3 +1,4 @@
+import { BaseEntity } from "./BaseEntity.model";
 import { Grad } from "./Grad.model";
 import { Kategorija } from "./Kategorija.model";
 import { Korisnik } from "./Korisnik.model";

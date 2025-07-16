@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import server.DTO.KorisnikDTO;
+import server.mapper.BaseMapper;
 import server.mapper.KorisnikMapper;
 import server.model.Korisnik;
 import server.repository.KorisnikRepository;
@@ -37,6 +38,10 @@ public class KorisnikService extends BaseService<Korisnik, Long, KorisnikDTO>{
 	
 	public Korisnik findByKorisnickoIme(String korisnickoIme) {
 		return ((KorisnikRepository)repository).findByKorisnickoIme(korisnickoIme).orElse(null);
+	}
+	
+	public BaseMapper<Korisnik, KorisnikDTO> getMapper() {
+	    return this.mapper;
 	}
 
 }

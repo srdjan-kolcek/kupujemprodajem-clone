@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { FormField } from '../FormField/FormField';
+import { BaseEntity } from '../../../models/BaseEntity.model';
 
 interface GenericFormProps<T extends BaseEntity> {
     item?: T | Omit<T, 'id'>;
@@ -16,7 +17,7 @@ export const GenericForm = <T extends BaseEntity>({
     onSubmit,
     onCancel,
     isEditing,
-    formError, // Prop for external errors
+    formError, 
 }: GenericFormProps<T>) => {
     const [formData, setFormData] = useState<Record<string, any>>({});
     const [internalFormError, setInternalFormError] = useState<string | null>(null);

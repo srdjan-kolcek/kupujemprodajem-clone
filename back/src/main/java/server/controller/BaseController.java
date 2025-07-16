@@ -33,7 +33,7 @@ public abstract class BaseController<T, ID, D> {
         }
     }
 
-    @PreAuthorize("isAuthenticated()")
+    //@PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
     public ResponseEntity<D> getById(@PathVariable ID id) {
         return service.findById(id)
@@ -42,7 +42,7 @@ public abstract class BaseController<T, ID, D> {
                 .body("Entity not found."));
     }
 
-    @PreAuthorize("isAuthenticated()")
+    //@PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<Iterable<D>> getAll() {
         Iterable<D> allDtos = service.findAll();
