@@ -21,7 +21,7 @@ public abstract class BaseController<T, ID, D> {
         this.service = service;
     }
 
-    @Secured("ROLE_KORISNIK")
+    //@Secured("ROLE_KORISNIK")
     @PostMapping
     public ResponseEntity<D> create(@RequestBody D dto) {
     	try {
@@ -49,7 +49,7 @@ public abstract class BaseController<T, ID, D> {
         return ResponseEntity.ok(allDtos);
     }
 
-    @Secured("ROLE_KORISNIK")
+    //@Secured("ROLE_KORISNIK")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable ID id) {
         if (service.findById(id).isPresent()) {
@@ -61,7 +61,7 @@ public abstract class BaseController<T, ID, D> {
         }
     }
 
-    @Secured("ROLE_KORISNIK")
+    //@Secured("ROLE_KORISNIK")
     @PutMapping("/{id}")
     public ResponseEntity<D> updateEntity(@PathVariable ID id, @RequestBody D dto) {
         D updatedDto = service.update(id, dto);

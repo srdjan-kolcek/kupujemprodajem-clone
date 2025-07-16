@@ -14,4 +14,8 @@ public interface KorisnikMapper extends BaseMapper<Korisnik, KorisnikDTO> {
 	@Mapping(target = "oglasi", ignore = true)
 	KorisnikDTO toDto(Korisnik courseCondition);
 	
+	@Override
+    @Mapping(target = "dodeljenaPravaPristupa", ignore = true)
+    @Mapping(target = "oglasi", ignore = true)
+    Korisnik toEntity(KorisnikDTO dto);
 }

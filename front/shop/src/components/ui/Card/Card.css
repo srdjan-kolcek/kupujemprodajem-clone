@@ -1,0 +1,86 @@
+/* src/components/Card/Card.css */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  width: 300px;
+  margin: 1rem;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card__image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.card__content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card__name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.5rem;
+}
+
+.card__info {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0.25rem 0;
+}
+
+.card__label {
+  font-weight: 500;
+  color: #888;
+}
+
+.card__buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.card__button {
+  flex-grow: 1;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+  text-transform: uppercase;
+}
+
+.card__button--edit {
+  background-color: #2b7af0;
+  color: #fff;
+}
+
+.card__button--edit:hover {
+  background-color: #1e5cb3;
+  transform: translateY(-1px);
+}
+
+.card__button--delete {
+  background-color: #f04e4e;
+  color: #fff;
+}
+
+.card__button--delete:hover {
+  background-color: #b33838;
+  transform: translateY(-1px);
+}

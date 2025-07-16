@@ -1,25 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Header from './components/shared/Header/Header';
+import Layout from './components/shared/Layout/Layout';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [username, setUsername] = useState<string | undefined>(undefined);
+
+  const handleLogin = () => {
+    // Ovde bi bila prava logička provera sa backend-om
+    setIsLoggedIn(true);
+    setUsername('PetarPetrovic');
+    console.log('Korisnik je prijavljen');
+  };
+
+  const handleRegister = () => {
+    // Ovde bi bila prava registracija korisnika
+    console.log('Korisnik se registruje');
+  };
+
+  const handleSignOut = () => {
+    // Ovde bi bila prava logička odjava korisnika
+    setIsLoggedIn(false);
+    setUsername(undefined);
+    console.log('Korisnik je odjavljen');
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header
+        isLoggedIn={isLoggedIn}
+        username={username}
+        onLogin={handleLogin}
+        onRegister={handleRegister}
+        onSignOut={handleSignOut}
+      />
+      <Layout />
+    </>
   );
 }
 

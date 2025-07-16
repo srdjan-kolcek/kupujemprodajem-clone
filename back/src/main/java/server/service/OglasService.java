@@ -24,7 +24,6 @@ public class OglasService extends BaseService<Oglas, Long, OglasDTO>{
 			existingEntity.setNaziv(dto.getNaziv());
 			existingEntity.setCena(dto.getCena());
 			existingEntity.setDatumPostavljanja(dto.getDatumPostavljanja());
-			existingEntity.setKategorija(dto.getKategorija());
 			existingEntity.setOpis(dto.getOpis());
 			existingEntity.setUrlSlike(dto.getUrlSlike());
 			Oglas savedEntity = repository.save(existingEntity);
