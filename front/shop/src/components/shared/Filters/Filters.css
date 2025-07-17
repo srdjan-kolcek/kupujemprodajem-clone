@@ -1,0 +1,30 @@
+.filters-bar {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.filters-bar label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.filters-bar select,
+.filters-bar input[type="number"] {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-top: 0.2rem;
+}
+
+.filters-bar input[type="checkbox"] {
+  margin-right: 0.3rem;
+  align-self: center;
+}

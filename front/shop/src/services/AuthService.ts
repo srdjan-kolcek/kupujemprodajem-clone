@@ -24,10 +24,11 @@ export const getLoggedInUser = (): Korisnik | null => {
   if (!token) return null;
   try {
     const decoded: any = jwtDecode(token);
-    if (!decoded.korisnickoIme) return null;
+    if (!decoded.sub) return null;
+
     return {
-      id: decoded.id, // samo ako imaš id u tokenu
-      korisnickoIme: decoded.korisnickoIme,
+      id: decoded.id,
+      korisnickoIme: decoded.sub,
       sifra: '',
       brojTelefona: decoded.brojTelefona || '',
       datumRegistracije: decoded.datumRegistracije || '',

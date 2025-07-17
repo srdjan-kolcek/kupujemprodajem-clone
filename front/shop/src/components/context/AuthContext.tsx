@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { isUserLoggedIn } from '../../services/AuthService';
-import { getLoggedInUsername, logoutUser } from '../../pages/AuthPage/AuthPage';
+import { isUserLoggedIn, getLoggedInUser, clearToken } from '../../services/AuthService';
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -18,7 +17,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     if (isUserLoggedIn()) {
       setIsLoggedIn(true);
-      setUsername(getLoggedInUsername() || undefined);
+      const user = getLoggedInUser();
+      setUsername(user?.korisnickoIme);
     }
   }, []);
 
@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
-    logoutUser();
+    clearToken();
     setIsLoggedIn(false);
     setUsername(undefined);
   };

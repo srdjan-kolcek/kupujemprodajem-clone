@@ -1,4 +1,3 @@
-/* Sadržaj kao u Login.module.css, sa promenama klasa ako su potrebne specifične razlike */
 .registerContainer {
   display: flex;
   justify-content: center;
@@ -27,6 +26,7 @@
   color: #d9534f;
   margin-bottom: 15px;
   font-size: 0.9em;
+  text-align: left;
 }
 
 .inputGroup {
@@ -47,6 +47,7 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   box-sizing: border-box;
+  font-size: 16px;
   transition: border-color 0.3s;
 }
 
@@ -68,13 +69,19 @@
   transition: background-color 0.3s;
 }
 
-.submitButton:hover {
+.submitButton:hover:not(:disabled) {
   background-color: #0056b3;
+}
+
+.submitButton:disabled {
+  background-color: #7baaf7;
+  cursor: not-allowed;
 }
 
 .formLink {
   margin-top: 20px;
   color: #777;
+  text-align: center;
 }
 
 .formLink a {

@@ -5,6 +5,7 @@ import { Korisnik } from '../../models/Korisnik.model';
 import { getLoggedInUser } from '../../services/AuthService';
 import { oglasService } from '../../services/OglasService';
 import { useNavigate } from 'react-router-dom';
+import { log } from 'console';
 
 interface OglasPrikazProps {
   oglasId: number;
@@ -39,7 +40,7 @@ const OglasPrikaz: React.FC<OglasPrikazProps> = ({ oglasId }) => {
     fetchOglas();
   }, [oglasId]);
 
-  const isOwner = oglas && currentUser && oglas.korisnik.id === currentUser.id;
+  const isOwner = oglas && currentUser && oglas.korisnik.korisnickoIme === currentUser.korisnickoIme;
 
   const handleDeleteClick = async () => {
     if (!oglas) return;
@@ -57,7 +58,7 @@ const OglasPrikaz: React.FC<OglasPrikazProps> = ({ oglasId }) => {
 
   const handleEditClick = () => {
     console.log(`Navigacija na izmenu oglasa ID: ${oglasId}`);
-    navigate(`/oglas/${oglasId}/edit`);
+    navigate(`/oglas/form/${oglasId}`);
   };
 
   if (loading) return <div className="loading">Učitavanje oglasa...</div>;

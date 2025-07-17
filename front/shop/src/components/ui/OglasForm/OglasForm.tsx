@@ -4,6 +4,12 @@ import { Oglas } from '../../../models/Oglas.model';
 import { FormField } from '../../shared/FormField/FormField';
 import { GenericForm } from '../../shared/Form/GenericForm';
 import { useCrud } from '../../../hooks/useCrud';
+import { Kategorija } from '../../../models/Kategorija.model';
+import { Grad } from '../../../models/Grad.model';
+import { Korisnik } from '../../../models/Korisnik.model';
+import { getLoggedInUser } from '../../../services/AuthService';
+import './OglasForm.css';
+
 
 const OglasForm: React.FC = () => {
   const { oglasId } = useParams<{ oglasId: string }>();
@@ -14,15 +20,30 @@ const OglasForm: React.FC = () => {
   const [oglas, setOglas] = useState<Oglas | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
+  const { data: kategorije } = useCrud<Kategorija>('kategorije');
+  const { data: gradovi } = useCrud<Grad>('gradovi');
+
   const oglasFields: FormField[] = [
     { name: 'naziv', label: 'Naziv', type: 'text', required: true },
     { name: 'opis', label: 'Opis', type: 'textarea' },
     { name: 'urlSlike', label: 'URL Slike', type: 'url' },
     { name: 'cena', label: 'Cena', type: 'number', required: true },
-    { name: 'kategorija', label: 'Kategorija', type: 'select', required: true, nestedObjectKey: 'kategorija' },
-    { name: 'korisnik', label: 'Korisnik', type: 'select', required: true, nestedObjectKey: 'korisnik' },
-    { name: 'grad', label: 'Grad', type: 'select', required: true, nestedObjectKey: 'grad' },
-    { name: 'datumPostavljanja', label: 'Datum postavljanja', type: 'datetime-local', required: true },
+    {
+      name: 'kategorija',
+      label: 'Kategorija',
+      type: 'select',
+      required: true,
+      nestedObjectKey: 'kategorija',
+      options: kategorije.map(k => ({ value: k.id!, label: k.naziv }))
+    },
+    {
+      name: 'grad',
+      label: 'Grad',
+      type: 'select',
+      required: true,
+      nestedObjectKey: 'grad',
+      options: gradovi.map(g => ({ value: g.id!, label: `${g.naziv} (${g.drzava?.naziv || 'N/A'})` }))
+    },
   ];
 
   useEffect(() => {
@@ -35,26 +56,40 @@ const OglasForm: React.FC = () => {
     loadOglas();
   }, [oglasId, fetchById]);
 
+  const handleCancel = () => {
+    navigate('/');
+  };
+
   const handleSubmit = async (formData: Partial<Oglas>) => {
     try {
-      if (oglasId && oglas) {
-        await updateItem(oglas.id!, { ...oglas, ...formData } as Oglas);
-      } else {
-        await createItem(formData as Omit<Oglas, 'id'>);
+      const user = getLoggedInUser();
+      if (!user) {
+        alert('Morate biti prijavljeni da biste dodali oglas.');
+        return;
       }
-      navigate('/'); 
+
+      const enrichedData: Partial<Oglas> = {
+        ...formData,
+        korisnik: { id: user.id! } as Korisnik,
+        datumPostavljanja: new Date().toISOString()
+        
+      };
+
+      if (oglasId && oglas) {
+        await updateItem(parseInt(oglasId), enrichedData as Oglas);
+      } else {
+        await createItem(enrichedData as Omit<Oglas, 'id'>);
+      }
+      navigate('/');
     } catch (err: any) {
       setFormError(err.message || 'Greška prilikom snimanja.');
     }
   };
 
-  const handleCancel = () => {
-    navigate('/');
-  };
-
   return (
-    <div>
-      <h1>{oglasId ? 'Izmena oglasa' : 'Dodavanje oglasa'}</h1>
+    <div className="oglas-form-container">
+      <h1 className="oglas-form-title">{oglasId ? 'Izmena oglasa' : 'Dodavanje oglasa'}</h1>
+
       <GenericForm<Oglas>
         item={oglas || undefined}
         fields={oglasFields}
@@ -63,7 +98,8 @@ const OglasForm: React.FC = () => {
         isEditing={!!oglasId}
         formError={formError}
       />
-      {error && <div style={{ color: 'red' }}>{error.message}</div>}
+
+      {error && <div className="oglas-form-error">{error.message}</div>}
     </div>
   );
 };

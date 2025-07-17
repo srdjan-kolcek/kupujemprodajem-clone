@@ -11,5 +11,5 @@ export type Oglas = BaseEntity & {
     kategorija: Kategorija;
     korisnik: Korisnik;
     grad: Grad;
-    datumPostavljanja: Date;
+    datumPostavljanja: string;
 }

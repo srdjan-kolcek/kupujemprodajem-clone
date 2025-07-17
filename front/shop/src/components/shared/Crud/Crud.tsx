@@ -34,21 +34,20 @@ export const CrudComponent = <T extends BaseEntity>({
     const { data: gradovi } = useCrud<Grad>('gradovi');
 
     const formFieldsWithOptions: FormField[] = fields.map(field => {
-    if (field.name === 'drzava' && field.type === 'select') {
-        return { ...field, options: drzave.map(d => ({ value: d.id!, label: d.naziv })) };
-    }
-    if (field.name === 'kategorija' && field.type === 'select') {
-        return { ...field, options: kategorije.map(k => ({ value: k.id!, label: k.naziv })) };
-    }
-    if (field.name === 'korisnik' && field.type === 'select') {
-        return { ...field, options: korisnici.map(k => ({ value: k.id!, label: k.korisnickoIme })) };
-    }
-    if (field.name === 'grad' && field.type === 'select') {
-        return { ...field, options: gradovi.map(g => ({ value: g.id!, label: `${g.naziv} (${g.drzava?.naziv || 'N/A'})` })) };
-    }
-    return field;
-});
-
+        if (field.name === 'drzava' && field.type === 'select') {
+            return { ...field, options: drzave.map(d => ({ value: d.id!, label: d.naziv })) };
+        }
+        if (field.name === 'kategorija' && field.type === 'select') {
+            return { ...field, options: kategorije.map(k => ({ value: k.id!, label: k.naziv })) };
+        }
+        if (field.name === 'korisnik' && field.type === 'select') {
+            return { ...field, options: korisnici.map(k => ({ value: k.id!, label: k.korisnickoIme })) };
+        }
+        if (field.name === 'grad' && field.type === 'select') {
+            return { ...field, options: gradovi.map(g => ({ value: g.id!, label: `${g.naziv} (${g.drzava?.naziv || 'N/A'})` })) };
+        }
+        return field;
+    });
 
     const handleSubmit = async (formData: Omit<T, 'id'> | T) => {
         setFormError(null);
@@ -58,12 +57,14 @@ export const CrudComponent = <T extends BaseEntity>({
             } else {
                 await createItem(formData as Omit<T, 'id'>);
             }
+            await new Promise(res => setTimeout(res, 100));
             setShowForm(false);
             setEditingItem(null);
         } catch (err: any) {
             setFormError(err.message || `Greška prilikom spremanja ${title.toLowerCase()}.`);
         }
     };
+
 
     const handleDelete = async (id: number) => {
         if (onDeleteConfirm(id)) {

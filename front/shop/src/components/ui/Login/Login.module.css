@@ -28,33 +28,25 @@
   font-size: 0.9em;
 }
 
-.inputGroup {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-.inputGroup label {
-  display: block;
-  margin-bottom: 8px;
-  color: #555;
-  font-weight: 500;
-}
-
-.inputGroup input {
+.loginForm input[type="text"],
+.loginForm input[type="password"] {
   width: 100%;
   padding: 12px;
+  margin-bottom: 20px;
   border: 1px solid #ddd;
   border-radius: 4px;
   box-sizing: border-box;
+  font-size: 16px;
   transition: border-color 0.3s;
 }
 
-.inputGroup input:focus {
+.loginForm input[type="text"]:focus,
+.loginForm input[type="password"]:focus {
   outline: none;
   border-color: #007bff;
 }
 
-.submitButton {
+.loginForm button {
   width: 100%;
   padding: 12px;
   background-color: #007bff;
@@ -67,21 +59,26 @@
   transition: background-color 0.3s;
 }
 
-.submitButton:hover {
+.loginForm button:hover:not(:disabled) {
   background-color: #0056b3;
 }
 
-.formLink {
+.loginForm button:disabled {
+  background-color: #7baaf7;
+  cursor: not-allowed;
+}
+
+.loginForm p {
   margin-top: 20px;
   color: #777;
 }
 
-.formLink a {
+.loginForm p a {
   color: #007bff;
   text-decoration: none;
   font-weight: 600;
 }
 
-.formLink a:hover {
+.loginForm p a:hover {
   text-decoration: underline;
 }

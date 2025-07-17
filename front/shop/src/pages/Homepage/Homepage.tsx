@@ -1,23 +1,76 @@
 import React, { useEffect, useState } from 'react';
 import './Homepage.css';
-import { Korisnik } from '../../models/Korisnik.model';
 import { Oglas } from '../../models/Oglas.model';
+import { Kategorija } from '../../models/Kategorija.model';
 import Card from '../../components/ui/Card/Card';
 import { useCrud } from '../../hooks/useCrud';
-import { getLoggedInUser } from '../../services/AuthService';
 import { useNavigate } from 'react-router-dom';
-
+import { useAuth } from '../../components/context/AuthContext';
+import { getLoggedInUser } from '../../services/AuthService';
+import Filters from '../../components/shared/Filters/Filters';
+import { useSearch } from '../../components/context/SearchContext';
 
 const Homepage: React.FC = () => {
-  const [currentUser, setCurrentUser] = useState<Korisnik | null>(null);
+  const { username, isLoggedIn } = useAuth();
   const { data: oglasi, loading, error, deleteItem, fetchAll } = useCrud<Oglas>('oglasi');
+  const { data: kategorije } = useCrud<Kategorija>('kategorije');
   const navigate = useNavigate();
+  const { searchTerm } = useSearch();
+
+  const [filters, setFilters] = useState<{
+    kategorijaId: number | null;
+    cenaMin: number | null;
+    cenaMax: number | null;
+    showMineOnly: boolean;
+  }>({
+    kategorijaId: null,
+    cenaMin: null,
+    cenaMax: null,
+    showMineOnly: false,
+  });
+
+  const [filteredOglasi, setFilteredOglasi] = useState<Oglas[]>([]);
 
   useEffect(() => {
-    const user = getLoggedInUser();
-    setCurrentUser(user);
     fetchAll();
   }, []);
+
+  useEffect(() => {
+    if (!oglasi) {
+      setFilteredOglasi([]);
+      return;
+    }
+
+    const user = getLoggedInUser();
+
+    let filtered = oglasi;
+
+    if (filters.kategorijaId) {
+      filtered = filtered.filter(o => o.kategorija?.id === filters.kategorijaId);
+    }
+
+    if (filters.cenaMin !== null) {
+      filtered = filtered.filter(o => o.cena >= filters.cenaMin!);
+    }
+
+    if (filters.cenaMax !== null) {
+      filtered = filtered.filter(o => o.cena <= filters.cenaMax!);
+    }
+
+    if (filters.showMineOnly && user) {
+      filtered = filtered.filter(o => o.korisnik?.korisnickoIme === user.korisnickoIme);
+    }
+
+    // Dodaj filtriranje po searchTerm (case insensitive)
+    if (searchTerm.trim() !== '') {
+      const lowerSearch = searchTerm.toLowerCase();
+      filtered = filtered.filter(o =>
+        o.naziv.toLowerCase().includes(lowerSearch)
+      );
+    }
+
+    setFilteredOglasi(filtered);
+  }, [filters, oglasi, searchTerm]);
 
   const handleDelete = async (oglasId: number) => {
     try {
@@ -31,8 +84,7 @@ const Homepage: React.FC = () => {
   };
 
   const handleEdit = (oglasId: number) => {
-    console.log(`Navigacija na izmenu oglasa ID: ${oglasId}`);
-    navigate(`/oglas/${oglasId}`);
+    navigate(`/oglas/form/${oglasId}`);
   };
 
   if (loading) return <div className="loading">Učitavanje oglasa...</div>;
@@ -42,16 +94,26 @@ const Homepage: React.FC = () => {
   return (
     <div className="homepage">
       <h1>Svi oglasi</h1>
+
+      <Filters
+        kategorije={kategorije || []}
+        onFilterChange={setFilters}
+      />
+
       <div className="ads-container">
-        {oglasi.map((oglas) => (
-          <Card
-            key={oglas.id}
-            oglas={oglas}
-            korisnik={currentUser}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        ))}
+        {filteredOglasi.length > 0 ? (
+          filteredOglasi.map((oglas) => (
+            <Card
+              key={oglas.id}
+              oglas={oglas}
+              korisnik={isLoggedIn ? { korisnickoIme: username } as any : null}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))
+        ) : (
+          <div className="no-ads">Nema oglasa koji zadovoljavaju kriterijume pretrage.</div>
+        )}
       </div>
     </div>
   );
