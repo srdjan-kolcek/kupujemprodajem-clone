@@ -53,7 +53,7 @@ public class LoginController {
 
         if (passwordMatches) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(korisnik.getKorisnickoIme());
-            String token = tokenUtils.generateToken(userDetails);
+            String token = tokenUtils.generateToken(userDetails, korisnik.getId());
             return ResponseEntity.ok(token);
         }
 

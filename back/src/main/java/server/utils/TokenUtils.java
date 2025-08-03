@@ -48,10 +48,11 @@ public class TokenUtils {
 		return valid;
 	}
 
-	public String generateToken(UserDetails userDetails) {
+	public String generateToken(UserDetails userDetails, Long userId) {
 		HashMap<String, Object> payload = new HashMap<String, Object>();
 		payload.put("sub", userDetails.getUsername());
 		payload.put("authorities", userDetails.getAuthorities());
+		payload.put("id", userId);
 		
 		return Jwts.builder().claims(payload).expiration(new Date(System.currentTimeMillis() + 1000000)).signWith(getKey()).compact();
 	}

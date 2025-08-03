@@ -23,13 +23,14 @@ public abstract class BaseController<T, ID, D> {
 
     //@Secured("ROLE_KORISNIK")
     @PostMapping
-    public ResponseEntity<D> create(@RequestBody D dto) {
+    public ResponseEntity<?> create(@RequestBody D dto) {
     	try {
             D createdDto = service.save(dto);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdDto);
     	}
         catch(Exception e) {
-            return (ResponseEntity<D>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        	e.printStackTrace(); 
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
 

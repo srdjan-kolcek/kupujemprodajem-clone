@@ -68,20 +68,25 @@ const OglasForm: React.FC = () => {
         return;
       }
 
-      const enrichedData: Partial<Oglas> = {
-        ...formData,
-        korisnik: { id: user.id! } as Korisnik,
-        datumPostavljanja: new Date().toISOString()
-        
+      const finalData = {
+        naziv: formData.naziv,
+        opis: formData.opis,
+        urlSlike: formData.urlSlike,
+        cena: formData.cena,
+        kategorija: { id: formData.kategorija as unknown as number },
+        grad: { id: formData.grad as unknown as number },
+        korisnik: { id: user.id! },
+        datumPostavljanja: new Date().toISOString(),
       };
 
       if (oglasId && oglas) {
-        await updateItem(parseInt(oglasId), enrichedData as Oglas);
+        await updateItem(parseInt(oglasId), { id: parseInt(oglasId), ...finalData } as Oglas);
       } else {
-        await createItem(enrichedData as Omit<Oglas, 'id'>);
+        await createItem(finalData as Omit<Oglas, 'id'>);
       }
       navigate('/');
     } catch (err: any) {
+      console.error('Failed to submit form:', err);
       setFormError(err.message || 'Greška prilikom snimanja.');
     }
   };
